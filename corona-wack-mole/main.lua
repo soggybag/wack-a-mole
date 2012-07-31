@@ -4,7 +4,6 @@
 --
 -----------------------------------------------------------------------------------------
 
--- Your code here
 
 -- Hide the Status bar
 display.setStatusBar( display.HiddenStatusBar )
@@ -59,7 +58,9 @@ local function touch_mole( event )
 		transition.cancel( mole.transition_1 )
 		transition.cancel( mole.transition_2 )
 		
-		transition.to( mole, {y=60, time=1000, transition=easing.outExpo, onComplete=show_a_mole} )
+		mole:play()
+		
+		transition.to( mole, {delay=1000, y=60, time=1000, transition=easing.outExpo, onComplete=show_a_mole} )
 		
 		update_score()
 	end
@@ -80,15 +81,23 @@ end
 
 
 
------------------------------------------------------------------------------------------
--- Set up a sprite  sheet for the mole/alien. 
------------------------------------------------------------------------------------------
--- Each of the alien images in the sheet is 64x64 px. 
-local alien_sheet = sprite.newSpriteSheet( "Alien_64.png", 64, 64 )
--- There are 25 images total in the sheet image. 
-local alien_set = sprite.newSpriteSet( alien_sheet, 1, 25)
--- Add a new sprite made up of all 25 images. 
-sprite.add( alien_set, "alien", 1, 25, 5000, 0 )
+------------------------------------------------
+-- Image Sheet settings
+------------------------------------------------
+local image_sheet_width = 332
+local image_sheet_height = 398
+local image_sheet_tile_width = 66
+local image_sheet_tile_height = 66
+local image_sheet_tile_count = 30
+------------------------------------------------
+local options = {}
+options.width = image_sheet_tile_width
+options.height = image_sheet_tile_height
+options.numFrames = image_sheet_tile_count
+options.sheetContentWidth = image_sheet_width
+options.sheetContentHeight = image_sheet_height
+
+local thing_sheet = graphics.newImageSheet( "Alien_32_Red_3.png", options )
 -----------------------------------------------------------------------------------------
 
 
@@ -108,7 +117,12 @@ local function make_mole_hole()
 	local mole_group = display.newGroup()	-- Container group
 	local hole_back = display.newImageRect( "mole_hole_back.png", 80, 21 )
 	local hole_front = display.newImageRect( "mole_hole_front.png", 80, 109 )
-	local alien_sprite = sprite.newSprite( alien_set )
+	local sequenceData = {
+				{ name="a", start=1, count=10, time=600, loopCount=0 },
+				{ name="b", start=11, count=10, time=600, loopCount=0 },
+				{ name="c", start=21, count=10, time=600, loopCount=0 }
+			}
+	local alien_sprite = display.newSprite( thing_sheet, sequenceData )
 	
 	-- Position elements inside of group. 
 	hole_back.y = 10
@@ -169,8 +183,18 @@ function show_a_mole()
 	local n = math.random( 1, #mole_array ) 
 	local mole = mole_array[n]
 	
-	-- Set the Alien image to a random frame. 
-	mole.currentFrame = math.random( 1, 25 )
+	local seq_number = math.random( 1, 3 )
+    
+    local seq = ""
+    if seq_number == 1 then 
+    	seq = "a"
+    elseif seq_number == 2 then 
+    	seq = "b"
+    else 
+    	seq = "c"
+    end
+    
+    mole:setSequence( seq )
 	
 	-- This mole is just appearing so it hasn't been whacked yet.
 	mole.unwhacked = true
