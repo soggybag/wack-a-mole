@@ -21,6 +21,8 @@ local scene = storyboard.newScene()
 ---------------------------------------------------------------------------------
 
 local button_array
+local mole_sounds = require( "mole_sounds" )
+
 
 local function on_tap( event ) 
 	local button = event.target
@@ -56,6 +58,8 @@ function scene:enterScene( event )
 		local button = button_array[i]
 		button:addEventListener( "tap", on_tap )
 	end 
+	
+	mole_sounds.play_random_sound() 
 	
 end
 

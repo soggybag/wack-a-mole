@@ -3,6 +3,7 @@
 
 local M = {}
 
+local mole_sounds = require( "mole_sounds" )
 
 local hole_back_image_url = "images/mole_hole_back.png"
 local hole_front_image_url = "images/mole_hole_front.png"
@@ -67,6 +68,7 @@ local function touch_mole( event )
 								
 		local event = {name="whack", target=mole}
 		mole.mole_group:dispatchEvent( event )
+		mole_sounds.play_sound_by_id( mole.seq )
 	end
 end 
 
@@ -117,6 +119,7 @@ local show_a_mole = function( mole )
 	end
 	
 	mole:setSequence( seq )
+	mole.seq = seq
 	
 	-- This mole is just appearing so it hasn't been whacked yet.
 	mole.unwhacked = true
@@ -129,6 +132,7 @@ local show_a_mole = function( mole )
 											transition=easing.outExpo,
 											onComplete=mole_down} )
 
+	mole_sounds.play_sound_by_id( "up" )
 end 
 -----------------------------------------------------------------------------------------
 

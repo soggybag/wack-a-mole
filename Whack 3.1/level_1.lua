@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 --
--- Mole game level_2.lua
+-- scenetemplate.lua
 --
 ----------------------------------------------------------------------------------
 
@@ -25,6 +25,7 @@ local scene = storyboard.newScene()
 -- Declare some variables 
 -----------------------------------------------------------------------------------------
 local mole_factory = require( "mole_factory" )
+local mole_sounds = require( "mole_sounds" )
 
 local score_text
 local background
@@ -89,23 +90,7 @@ function scene:createScene( event )
 	score_text = display.newText( "0", 5, 0, native.systemFont, 24 )
 	score_text:setReferencePoint( display.TopRightReferencePoint ) -- Align it to the top right
 	score_text.x = display.contentWidth - 5					-- Position it in the top right
-	
-	
-	-----------------------------------------------------------------------------------------
-	-- Make sounds 
-	-----------------------------------------------------------------------------------------
-	--[[
-	popup_sound_array[1] = audio.loadSound( "sounds/button-37.wav" )
-	popup_sound_array[2] = audio.loadSound( "sounds/button-41.wav" )
-	popup_sound_array[3] = audio.loadSound( "sounds/button-17.wav" )
-	
-	touch_sound_array[1] = audio.loadSound( "sounds/button-1.wav" )
-	touch_sound_array[2] = audio.loadSound( "sounds/button-7.wav" )
-	touch_sound_array[3] = audio.loadSound( "sounds/button-9.wav" )
-	]]
-	-----------------------------------------------------------------------------------------
-	
-	
+		
 	return_button = display.newRoundedRect( 0, 0, 40, 40, 8 )
 	return_button:setFillColor( 90, 90, 80 )
 	return_button.x = 25
@@ -113,10 +98,10 @@ function scene:createScene( event )
 		
 	
 	group:insert( background )
-	for i = 0, 5, 1 do 
+	for i = 0, 2, 1 do 
 		local mole = mole_factory.make_mole_hole()
-		mole.x = ( display.contentCenterX - 100 ) + ( ( i % 3 ) * 100 )
-		mole.y = ( display.contentCenterY - 0 ) + ( math.floor( i / 3 ) * 100 ) 
+		mole.x = ( display.contentCenterX - 100 ) + ( i * 100 )
+		mole.y = display.contentCenterY
 		
 		mole:addEventListener( "moleDown", on_mole )
 		mole:addEventListener( "whack", on_whack )
@@ -125,6 +110,7 @@ function scene:createScene( event )
 		group:insert( mole )
 	end
 	group:insert( return_button )
+	group:insert( score_text )
 end
 
 
@@ -134,6 +120,7 @@ function scene:enterScene( event )
 	
 	return_button:addEventListener( "tap", tap_return )
 	show_mole()
+	mole_sounds.play_random_sound() 
 end
 
 
@@ -149,22 +136,6 @@ function scene:exitScene( event )
 		local mole = mole_array[i]
 		mole.reset()
 	end
-	
-	--[[
-	for i = 1, #sound_channels, 1 do 
-		local channel = sound_channels[i]
-		audio.stop( channel )
-	end 
-	
-	for i = 1, #popup_sound_array, 1 do 
-		audio.dispose( popup_sound_array[i] )
-	end 
-	
-	for i = 1, #touch_sound_array, 1 do
-		audio.dispose( touch_sound_array[i] )
-	end 
-	]]
-	
 end
 
 

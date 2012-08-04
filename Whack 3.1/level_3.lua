@@ -125,6 +125,7 @@ function scene:createScene( event )
 		group:insert( mole )
 	end
 	group:insert( return_button )
+	group:insert( score_text )
 end
 
 

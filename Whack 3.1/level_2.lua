@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 --
--- scenetemplate.lua
+-- Mole game level_2.lua
 --
 ----------------------------------------------------------------------------------
 
@@ -113,10 +113,10 @@ function scene:createScene( event )
 		
 	
 	group:insert( background )
-	for i = 0, 2, 1 do 
+	for i = 0, 5, 1 do 
 		local mole = mole_factory.make_mole_hole()
-		mole.x = ( display.contentCenterX - 100 ) + ( i * 100 )
-		mole.y = display.contentCenterY
+		mole.x = ( display.contentCenterX - 100 ) + ( ( i % 3 ) * 100 )
+		mole.y = ( display.contentCenterY - 0 ) + ( math.floor( i / 3 ) * 100 ) 
 		
 		mole:addEventListener( "moleDown", on_mole )
 		mole:addEventListener( "whack", on_whack )
@@ -125,6 +125,7 @@ function scene:createScene( event )
 		group:insert( mole )
 	end
 	group:insert( return_button )
+	group:insert( score_text )
 end
 
 
